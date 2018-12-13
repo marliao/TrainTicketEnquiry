@@ -41,6 +41,8 @@ import java.util.List;
 
 public class TrainInforListActivity extends AppCompatActivity {
 
+    private static final int HAVEDATA = 100;
+    private static final int NODATA = 101;
     private ImageView ivBack;
     private TextView tvStartEndStation;
     private ImageView ivSequence;
@@ -54,14 +56,34 @@ public class TrainInforListActivity extends AppCompatActivity {
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            Data data = MyApplication.getData();
-            mTrainInfoMoreList=data.getTrainInfoMoreList();
-            myAdapter.notifyDataSetChanged();
-            myAdapter = new MyAdapter(mTrainInfoMoreList);
-            lvTrainInfo.setAdapter(myAdapter);
+            switch (msg.what) {
+                case HAVEDATA:
+                    Data data = MyApplication.getData();
+                    mTrainInfoMoreList = data.getTrainInfoMoreList();
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter = new MyAdapter(mTrainInfoMoreList);
+                    lvTrainInfo.setAdapter(myAdapter);
+                    break;
+                case NODATA:
+                    showDialogToTellUser();
+                    break;
+            }
             super.handleMessage(msg);
         }
     };
+
+    private void showDialogToTellUser() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("小贴士");
+        builder.setMessage("您要购买的当日车票已售完，请重新选择日期，谢谢！");
+        builder.setPositiveButton("好的", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //
+            }
+        });
+        builder.show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,8 +185,16 @@ public class TrainInforListActivity extends AppCompatActivity {
                             MyApplication.getEndStationCode(), MyApplication.getEndStation());
                     String httpResult = HttpUtil.doGet(path);
                     Data data = ResolveJson.resolveTicketInfo(httpResult);
-                    MyApplication.setData(data);
-                    mHandler.sendEmptyMessage(0);
+                    if (data != null) {
+                        MyApplication.setData(data);
+                        Message msg = Message.obtain();
+                        msg.what = HAVEDATA;
+                        mHandler.sendMessage(msg);
+                    } else {
+                        Message msg = Message.obtain();
+                        msg.what = NODATA;
+                        mHandler.sendMessage(msg);
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

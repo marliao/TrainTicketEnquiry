@@ -1,5 +1,7 @@
 package com.marliao.trainticketenquiry.Utils;
 
+import android.util.Log;
+
 import com.marliao.trainticketenquiry.vo.AllTrainType;
 import com.marliao.trainticketenquiry.vo.AllTrainTypeMore;
 import com.marliao.trainticketenquiry.vo.Data;
@@ -18,9 +20,14 @@ public class ResolveJson {
 
     public static Data resolveTicketInfo(String jsonStr) throws JSONException {
 
+        Data data = new Data();
+
         JSONObject dataJson = new JSONObject(jsonStr).getJSONObject("data");
 
-        Data data = new Data();
+        if (dataJson.getInt("count") == 0) {
+            data = null;
+            return data;
+        }
 
         data.setCount(dataJson.getInt("count"));
 
@@ -75,7 +82,7 @@ public class ResolveJson {
         JSONObject allTrainTypeJson = dataJson.getJSONObject("allTrainType");
         AllTrainType allTrainType = new AllTrainType();
         JSONArray allTrainTypeJsonJSONArray = allTrainTypeJson.getJSONArray("list");
-        List<AllTrainTypeMore> allTrainTypeMoreList=new ArrayList<>();
+        List<AllTrainTypeMore> allTrainTypeMoreList = new ArrayList<>();
         for (int i = 0; i < allTrainTypeJsonJSONArray.length(); i++) {
             AllTrainTypeMore allTrainTypeMore = new AllTrainTypeMore();
             allTrainTypeMore.setTrainType(allTrainTypeJsonJSONArray.getJSONObject(i).getInt("trainType"));
