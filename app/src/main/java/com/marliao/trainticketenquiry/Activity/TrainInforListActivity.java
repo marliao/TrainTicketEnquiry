@@ -106,6 +106,7 @@ public class TrainInforListActivity extends AppCompatActivity {
     }
 
     private void sequence(String sort) {
+        //todo 未实现
         if (sort.equals("最早出发")) {
             TrainInfoSort.firstDeparture(mTrainInfoMoreList);
         } else if (sort.equals("最晚出发")) {
@@ -162,14 +163,18 @@ public class TrainInforListActivity extends AppCompatActivity {
             viewHolder.tvEndTime.setText(getItem(position).getDestArriveTime());
             viewHolder.tvEdnStation.setText(getItem(position).getDestStationName());
             viewHolder.tvTrainNum.setText(getItem(position).getTrainNum());
-            viewHolder.tvDuration.setText(getItem(position).getDuration() + "");
+            viewHolder.tvDuration.setText(getItem(position).getDurationStr());
             //价格排序，取最低价
             List<Prices> pricesList = getItem(position).getPrices();
             double lowPrice = 0;
             for (int i = 0; i < pricesList.size() - 1; i++) {
-                int compare = Double.compare(pricesList.get(i).getPrice(), pricesList.get(i + 1).getPrice());
-                if (compare <=0) {
-                    lowPrice = pricesList.get(i).getPrice();
+                for (int j = 0; j < pricesList.size() - 1 - i; j++) {
+                    int compare = Double.compare(pricesList.get(j).getPrice(), pricesList.get(j + 1).getPrice());
+                    if (compare <0) {
+                        lowPrice = pricesList.get(j).getPrice();
+                    }else {
+                        lowPrice= pricesList.get(j+1).getPrice();
+                    }
                 }
             }
             viewHolder.tvPrice.setText("￥" + lowPrice);

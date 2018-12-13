@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_seat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="座位等次"
+        android:layout_alignParentLeft="true"
+        android:textColor="#000"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tv_is_have_seat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="200dp"
+        android:text="预估票的数量"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="售价"
+        android:layout_marginLeft="500dp"
+        android:textColor="#FF6800"
+        android:textSize="30sp" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="120dp"
+        android:src="@drawable/yuyue"/>
+
+
+</RelativeLayout>
