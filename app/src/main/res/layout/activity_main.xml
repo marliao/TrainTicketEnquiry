@@ -90,39 +90,17 @@
             android:text="出发时间："
             android:textSize="30sp" />
 
-
-        <EditText
-            android:id="@+id/et_start_year"
+        <TextView
+            android:id="@+id/tv_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:hint="2018"
+            android:text="20231"
             android:padding="10dp"
             android:singleLine="true"
-            android:textSize="30sp" />
+            android:textSize="30sp"/>
 
-        <EditText
-            android:id="@+id/et_start_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="12"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="30sp" />
-
-        <EditText
-            android:id="@+id/et_start_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:hint="12"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="30sp" />
     </LinearLayout>
 
     <ImageView

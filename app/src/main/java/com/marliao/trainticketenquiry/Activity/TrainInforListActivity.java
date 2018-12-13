@@ -1,8 +1,11 @@
 package com.marliao.trainticketenquiry.Activity;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.os.TransactionTooLargeException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,19 +15,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.marliao.trainticketenquiry.R;
+import com.marliao.trainticketenquiry.Utils.GenerateJson;
+import com.marliao.trainticketenquiry.Utils.HttpUtil;
+import com.marliao.trainticketenquiry.Utils.ResolveJson;
 import com.marliao.trainticketenquiry.Utils.TrainInfoSort;
 import com.marliao.trainticketenquiry.engine.MyApplication;
+import com.marliao.trainticketenquiry.vo.Data;
 import com.marliao.trainticketenquiry.vo.Prices;
 import com.marliao.trainticketenquiry.vo.TrainInfoMore;
 
+import org.json.JSONException;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +48,20 @@ public class TrainInforListActivity extends AppCompatActivity {
     private ListView lvTrainInfo;
     private List<TrainInfoMore> mTrainInfoMoreList;
     private MyAdapter myAdapter;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            Data data = MyApplication.getData();
+            mTrainInfoMoreList=data.getTrainInfoMoreList();
+            myAdapter.notifyDataSetChanged();
+            myAdapter = new MyAdapter(mTrainInfoMoreList);
+            lvTrainInfo.setAdapter(myAdapter);
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +100,7 @@ public class TrainInforListActivity extends AppCompatActivity {
 
         tvStartTime = (TextView) findViewById(R.id.tv_start_time);
         tvStartTime.setText(MyApplication.getTime());
+        dateSelector();
 
         lvTrainInfo = (ListView) findViewById(R.id.lv_train_info);
         lvTrainInfo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,6 +114,63 @@ public class TrainInforListActivity extends AppCompatActivity {
                 startActivity(new Intent(TrainInforListActivity.this, TrainDetailsActivity.class));
             }
         });
+    }
+
+    private void dateSelector() {
+        Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        tvStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //调用日期选择器
+                new DatePickerDialog(TrainInforListActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        mYear = year;
+                        mMonth = month;
+                        mDay = dayOfMonth;
+                        String days;
+                        if (mMonth + 1 < 10) {
+                            if (mDay < 10) {
+                                days = new StringBuffer().append(mYear).append("-").append("0").append(mMonth + 1).append("-").append("0").append(mDay).toString();
+                            } else {
+                                days = new StringBuffer().append(mYear).append("-").append("0").append(mMonth + 1).append("-").append(mDay).toString();
+                            }
+                        } else {
+                            if (mDay < 10) {
+                                days = new StringBuffer().append(mYear).append("-").append(mMonth + 1).append("-").append("0").append(mDay).toString();
+                            } else {
+                                days = new StringBuffer().append(mYear).append("-").append(mMonth + 1).append("-").append(mDay).toString();
+                            }
+                        }
+                        tvStartTime.setText(days);
+                        //日期选择结束后，重新根据据日期查询车票信息
+                        getNewTrainTicketInfo(days);
+                    }
+                }, mYear, mMonth, mDay).show();
+            }
+        });
+    }
+
+    private void getNewTrainTicketInfo(final String days) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    String path = GenerateJson.getTrainTicket(days, MyApplication.getStartStationCode(), MyApplication.getStartStation(),
+                            MyApplication.getEndStationCode(), MyApplication.getEndStation());
+                    String httpResult = HttpUtil.doGet(path);
+                    Data data = ResolveJson.resolveTicketInfo(httpResult);
+                    MyApplication.setData(data);
+                    mHandler.sendEmptyMessage(0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                super.run();
+            }
+        }.start();
     }
 
     private void radioBoxSelectionSortingMethod() {

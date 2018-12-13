@@ -12,15 +12,21 @@
         android:roundIcon="@drawable/train"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MainActivity">
+        <activity
+            android:name=".Activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.TrainInforListActivity" />
-        <activity android:name=".Activity.TrainDetailsActivity"></activity>
+        <activity
+            android:name=".Activity.TrainInforListActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".Activity.TrainDetailsActivity"
+            android:launchMode="singleTask"></activity>
     </application>
 
 </manifest>

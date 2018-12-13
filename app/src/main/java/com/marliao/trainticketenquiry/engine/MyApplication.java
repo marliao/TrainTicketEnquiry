@@ -12,6 +12,44 @@ public class MyApplication extends Application {
     private static Data data;
     private static String time;
     private static String startEndStation;
+    private static String startStation;
+    private static String endStation;
+    private static String StartStationCode;
+    private static String endStationCode;
+
+
+    public static String getStartStationCode() {
+        return StartStationCode;
+    }
+
+    public static void setStartStationCode(String startStationCode) {
+        StartStationCode = startStationCode;
+    }
+
+    public static String getEndStationCode() {
+        return endStationCode;
+    }
+
+    public static void setEndStationCode(String endStationCode) {
+        MyApplication.endStationCode = endStationCode;
+    }
+
+
+    public static String getStartStation() {
+        return startStation;
+    }
+
+    public static void setStartStation(String startStation) {
+        MyApplication.startStation = startStation;
+    }
+
+    public static String getEndStation() {
+        return endStation;
+    }
+
+    public static void setEndStation(String endStation) {
+        MyApplication.endStation = endStation;
+    }
 
     public static String getStartEndStation() {
         return startEndStation;
