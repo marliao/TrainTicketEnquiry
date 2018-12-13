@@ -3,6 +3,7 @@ package com.marliao.trainticketenquiry.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.TransactionTooLargeException;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -106,7 +107,6 @@ public class TrainInforListActivity extends AppCompatActivity {
     }
 
     private void sequence(String sort) {
-        //todo 未实现
         if (sort.equals("最早出发")) {
             TrainInfoSort.firstDeparture(mTrainInfoMoreList);
         } else if (sort.equals("最晚出发")) {
@@ -166,15 +166,10 @@ public class TrainInforListActivity extends AppCompatActivity {
             viewHolder.tvDuration.setText(getItem(position).getDurationStr());
             //价格排序，取最低价
             List<Prices> pricesList = getItem(position).getPrices();
-            double lowPrice = 0;
-            for (int i = 0; i < pricesList.size() - 1; i++) {
-                for (int j = 0; j < pricesList.size() - 1 - i; j++) {
-                    int compare = Double.compare(pricesList.get(j).getPrice(), pricesList.get(j + 1).getPrice());
-                    if (compare <0) {
-                        lowPrice = pricesList.get(j).getPrice();
-                    }else {
-                        lowPrice= pricesList.get(j+1).getPrice();
-                    }
+            double lowPrice = 1000000000.0;
+            for (int i = 0; i < pricesList.size(); i++) {
+                if (lowPrice > pricesList.get(i).getPrice()) {
+                    lowPrice = pricesList.get(i).getPrice();
                 }
             }
             viewHolder.tvPrice.setText("￥" + lowPrice);
