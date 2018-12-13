@@ -9,6 +9,8 @@ import com.marliao.trainticketenquiry.vo.TrainInfoMore;
 
 public class MyApplication extends Application {
 
+    public static int position=0;
+
     private static Data data;
     private static String time;
     private static String startEndStation;
@@ -16,7 +18,6 @@ public class MyApplication extends Application {
     private static String endStation;
     private static String StartStationCode;
     private static String endStationCode;
-
 
     public static String getStartStationCode() {
         return StartStationCode;

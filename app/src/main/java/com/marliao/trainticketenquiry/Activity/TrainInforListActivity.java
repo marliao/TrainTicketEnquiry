@@ -207,9 +207,10 @@ public class TrainInforListActivity extends AppCompatActivity {
         final String[] sortMethod = new String[]{"最早出发", "最晚出发", "耗时最长"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("筛选方式");
-        builder.setSingleChoiceItems(sortMethod, 0, new DialogInterface.OnClickListener() {
+        builder.setSingleChoiceItems(sortMethod, MyApplication.position, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                MyApplication.position=which;
                 String sort = sortMethod[which];
                 sequence(sort);
                 dialog.dismiss();
